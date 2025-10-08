@@ -8,6 +8,7 @@ Vagrant.configure("2") do |config|
     server.vm.provider "virtualbox" do |vb|
       vb.name = "willS"
       vb.memory = 1024
+      vb.cpu = 1
     end
 
     server.vm.provision "shell", inline: <<-SHELL
@@ -26,6 +27,7 @@ Vagrant.configure("2") do |config|
     worker.vm.provider "virtualbox" do |vb|
       vb.name = "willSW"
       vb.memory = 1024
+      vb.cpu = 1
     end
     worker.vm.provision "shell", inline: <<-SHELL
       cp /etc/environment /etc/systemd/system/k3s-agent.service.env
