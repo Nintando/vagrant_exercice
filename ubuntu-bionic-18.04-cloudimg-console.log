@@ -701,3 +701,13 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0M3+XkDOQXIZmmb4A9wlBv+GEJeTHwmq5nVnyvNUe
 [  616.335083] rcu_sched kthread starved for 40132 jiffies! g9371 c9370 f0x0 RCU_GP_WAIT_FQS(3) ->state=0x402 ->cpu=0
 [  616.346360] 	 (t=40132 jiffies g=9371 c=9370 q=1)
 [  616.366325] rcu_sched kthread starved for 40132 jiffies! g9371 c9370 f0x0 RCU_GP_WAIT_FQS(3) ->state=0x402 ->cpu=0
+[  756.003085] watchdog: BUG: soft lockup - CPU#1 stuck for 130s! [containerd-shim:4986]
+[  756.003899] INFO: rcu_sched self-detected stall on CPU
+[  756.026281] 	0-...!: (1 ticks this GP) idle=d6a/140000000000001/0 softirq=37445/37445 fqs=0 
+[  756.038449] 	 (t=34894 jiffies g=9384 c=9383 q=123)
+[  756.038455] rcu_sched kthread starved for 34894 jiffies! g9384 c9383 f0x0 RCU_GP_WAIT_FQS(3) ->state=0x402 ->cpu=0
+[  756.059118] INFO: rcu_sched self-detected stall on CPU
+[  756.068909] 	1-...0: (1 GPs behind) idle=3ea/140000000000001/0 softirq=38037/38077 fqs=2 
+[  756.082238] 	 (t=34912 jiffies g=9384 c=9383 q=84)
+[  931.069625] watchdog: BUG: soft lockup - CPU#1 stuck for 24s! [containerd-shim:3815]
+[  931.069935] watchdog: BUG: soft lockup - CPU#0 stuck for 24s! [containerd-shim:3664]
