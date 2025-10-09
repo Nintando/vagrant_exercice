@@ -1,0 +1,8 @@
+- name: Set up K3s Server and Agents
+  hosts: all
+  become: true
+  roles:
+    - role: k3s_server
+      when: "'k3s_server' in group_names"
+    - role: k3s_agent
+      when: "'k3s_agents' in group_names"

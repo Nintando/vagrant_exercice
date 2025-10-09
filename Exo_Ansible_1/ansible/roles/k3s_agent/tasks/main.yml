@@ -1,0 +1,48 @@
+- name: Wait for server token to be available
+  wait_for:
+    path: /vagrant/k3s_token
+    timeout: 60
+
+- name: Wait for API server to be available
+  wait_for:
+    host: 192.168.56.110
+    port: 6443
+    timeout: 60
+
+- name: Read the token
+  slurp:
+    src: /vagrant/k3s_token
+  register: token_encoded
+
+- name: Decode the token
+  set_fact:
+    k3s_token: "{{ token_encoded.content | b64decode }}"
+
+- name: Install K3s agent
+  shell: |
+    curl -sfL https://get.k3s.io/ | K3S_URL=https://192.168.56.110:6443 K3S_TOKEN={{ k3s_token }} sh -
+  args:
+    creates: /etc/systemd/system/k3s-agent.service
+
+- name: Create .kube directory
+  file:
+    path: /home/vagrant/.kube
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: "0755"
+
+- name: Copy kubeconfig to agent node
+  copy:
+    src: /vagrant/kubeconfig
+    dest: /home/vagrant/.kube/config
+    remote_src: yes
+    owner: vagrant
+    group: vagrant
+    mode: "0644"
+
+- name: Add kubectl alias
+  lineinfile:
+    path: /home/vagrant/.bashrc
+    line: "alias k=kubectl"
+    state: present

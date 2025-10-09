@@ -2,3 +2,4 @@
 **/*.log
 **/k3s_token
 **/kubeconfig
+**/venv/*

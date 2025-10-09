@@ -1,0 +1,28 @@
+- name: Install K3s server
+  shell: |
+    curl -sfL https://get.k3s.io/ | sh -s - server --write-kubeconfig-mode 644
+  args:
+    creates: /etc/systemd/system/k3s.service
+
+- name: Wait for node-token to be created
+  wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
+    timeout: 60
+
+- name: Copy node-token to synced folder
+  copy:
+    src: /var/lib/rancher/k3s/server/node-token
+    dest: /vagrant/k3s_token
+    remote_src: yes
+
+- name: Copy kubeconfig to synced folder
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /vagrant/kubeconfig
+    remote_src: yes
+
+- name: Replace localhost IP with server IP in kubeconfig
+  replace:
+    path: /vagrant/kubeconfig
+    regexp: "127.0.0.1"
+    replace: "192.168.56.110"
