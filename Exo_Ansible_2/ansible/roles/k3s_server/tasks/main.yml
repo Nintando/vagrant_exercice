@@ -1,5 +1,5 @@
 ---
-- name: Install Python pip (if needed)
+- name: Install Python pip
   apt:
     name: python3-pip
     state: present
