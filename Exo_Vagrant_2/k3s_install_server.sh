@@ -5,7 +5,6 @@ kubectl create ns httpd-namespace
 
 for i in 1 2 3; do
   export APP_NUM=$i
-  export NODE_PORT=$((30000 + i))
   envsubst < /vagrant/web.yml | kubectl apply -f -
 done
 
