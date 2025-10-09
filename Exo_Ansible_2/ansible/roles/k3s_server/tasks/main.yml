@@ -1,0 +1,54 @@
+---
+- name: Install Python pip (if needed)
+  apt:
+    name: python3-pip
+    state: present
+  become: true
+
+- name: Install Kubernetes Python client
+  pip:
+    name: kubernetes
+    executable: pip3
+  become: true
+
+- name: Install k3s server
+  shell: curl -sfL https://get.k3s.io/ | sh -s - server --write-kubeconfig-mode 644
+
+- name: Set KUBECONFIG environment variable
+  set_fact:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+- name: Create namespace
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: httpd-namespace
+
+- name: Template web.yml for apps
+  template:
+    src: web.yml.j2
+    dest: "/tmp/web-{{ app_num }}.yml"
+  loop: "{{ apps }}"
+  loop_control:
+    loop_var: app_num
+  vars:
+    APP_NUM: "{{ app_num }}"
+
+- name: Apply web app manifests
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "/tmp/web-{{ app_num }}.yml"
+  loop: "{{ apps }}"
+  loop_control:
+    loop_var: app_num
+
+- name: Apply ingress manifest
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    src: "{{ role_path }}/files/ingress.yml"

@@ -1,31 +1,31 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: httpd-index-html-${APP_NUM}
+  name: httpd-index-html-{{APP_NUM}}
   namespace: httpd-namespace
 data:
   index.html: |
     <html>
       <body>
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg" alt="Kubernetes Logo with Name" width="300">
-        <h1>Welcome to Web App ${APP_NUM}</h1>
+        <h1>Welcome to Web App {{APP_NUM}}</h1>
       </body>
     </html>
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpd-deployment-${APP_NUM}
+  name: httpd-deployment-{{APP_NUM}}
   namespace: httpd-namespace
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: httpd-app-${APP_NUM}
+      app: httpd-app-{{APP_NUM}}
   template:
     metadata:
       labels:
-        app: httpd-app-${APP_NUM}
+        app: httpd-app-{{APP_NUM}}
     spec:
       containers:
         - name: httpd
@@ -38,16 +38,16 @@ spec:
       volumes:
         - name: html-volume
           configMap:
-            name: httpd-index-html-${APP_NUM}
+            name: httpd-index-html-{{APP_NUM}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: httpd-service-${APP_NUM}
+  name: httpd-service-{{APP_NUM}}
   namespace: httpd-namespace
 spec:
   selector:
-    app: httpd-app-${APP_NUM}
+    app: httpd-app-{{APP_NUM}}
   ports:
     - port: 80
       targetPort: 80
